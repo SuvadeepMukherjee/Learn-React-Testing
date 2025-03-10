@@ -121,6 +121,47 @@ In this example, we follow the *Arrange*, *Act*, *Assert* best practice test
 
 Multiple `expect()` assertions can be made within a single `it()` call. Regardless of the number of assertions made within a unit test, in order for the entire test to pass, all assertions must pass.
 
-
-
 > Note: The `.toBe()` matcher is used to compare simple data types for equality, while the `.toEqual()` matcher is used for deep equality comparisons.
+
+## Matcher Functions
+
+We used the expect() assertion function along with the `.toEqual()` matcher method.Lets lookabout a few more common matcher methods 
+
+```js
+//file: recipes.test.js
+
+// import the function to test
+import { getIngredients } from "./recipes.js"; 
+
+it("Gets only the ingredients list for Pesto", () => {
+  //arrange
+  const pestoRecipe = {
+    'Basil': '2 cups',
+    'Pine Nuts': '2 tablespoons',
+    'Garlic': '2 cloves',
+    'Olive Oil': '0.5 cups',
+    'Grated Parmesan': '0.5 cups'
+  };
+  const expectedIngredients = ["Basil", "Pine Nuts", "Garlic", "Olive Oil", "Grated Parmesan"];
+
+  //act
+  const actualIngredients = getIngredients(pestoRecipe);
+
+  //assert
+  expect(actualIngredients).toBeDefined();
+  expect(actualIngredients).toEqual(expectedIngredients);
+  expect(actualIngredients.length).toBe(5);
+  expect(actualIngredients[0] === "Basil").toBeTruthy();
+  expect(actualIngredients).not.toContain("Ice Cream");
+});
+
+```
+
+Let’s go over the matchers used in this example:
+
+1. `.toBeDefined()` is used to verify that a variable is not `undefined`. This is often the first thing checked.
+2. `.toEqual()` is used to perform deep equality checks between objects.
+3. `.toBe()` is similar to .toEqual() but is used to compare primitive values.
+4. `.toBeTruthy()` is used to verify whether a value is truthy or not.
+5. `.not` is used before another matcher to verify that the opposite result is true
+6. `.toContain()` is used when we want to verify that an item is in an array. In this case, since the `.not` matcher is used, we are verifying that `"Ice Cream"` is NOT in the array.
