@@ -165,3 +165,116 @@ Let’s go over the matchers used in this example:
 4. `.toBeTruthy()` is used to verify whether a value is truthy or not.
 5. `.not` is used before another matcher to verify that the opposite result is true
 6. `.toContain()` is used when we want to verify that an item is in an array. In this case, since the `.not` matcher is used, we are verifying that `"Ice Cream"` is NOT in the array.
+
+# Testing Async Code with Jest(Part 1)
+
+When we include asynchronous operations in our code, we must account for the possible timing issues in our test arising from these operations. Although we may be able to avoid these issues with custom timeouts, if the code takes longer, it will fail with a timeout error. Thus, it is crucial to handle these events effectively.
+
+Let’s return to the `findRecipes()` function from the `recipes` module. The `findRecipes()` method will make an asynchronous REST API call and pass the resolved data to a callback function. We might use this function to find the ingredients for pesto like so:
+
+```js
+findRecipe('pesto', (recipe) => {
+  console.log(recipe);
+  /* 
+  Prints {
+    'Basil': '2 cups',
+    'Pine Nuts': '2 tablespoons',
+    'Garlic': '2 cloves',
+    'Olive Oil': '0.5 cups',
+    'Grated Parmesan': '0.5 cups'
+  };
+  */
+});
+```
+
+If we wanted to make sure that this function does in fact get the requested data, we may be tempted to put our `expect()` assertion inside the callback function like so:
+
+```js
+it("Gets the full recipe for pesto", () => {
+  //arrange
+  const dish = "pesto";
+  const expectedRecipe = {
+    'Basil': '2 cups',
+    'Pine Nuts': '2 tablespoons',
+    'Garlic': '2 cloves',
+    'Olive Oil': '0.5 cups',
+    'Grated Parmesan': '0.5 cups'
+  };
+
+  //act  
+  findRecipe(dish, (actualRecipe) => {
+    //assert
+    expect(actualRecipe).toEqual(expectedRecipe);
+  });
+});
+
+```
+
+This logic seems fairly sound. When the API call resolves, the provided callback will be executed with the fetched data (`actualRecipe`) which can be compared to `expectedRecipe`.
+
+However, this test would leave us vulnerable to a false positive, meaning it would pass even if our API call and/or assertion failed! By default, Jest is not aware that it must wait for asynchronous callbacks to resolve before finishing a test. From Jest’s perspective, it executed the `findRecipe()` call and then moved on. When it didn’t immediately encounter any failing `expect()` assertions, the test passed!
+
+We can see this more clearly by replacing the assertion used above with an obviously failing assertion like `expect(undefined).toBeDefined()`:
+
+```js
+it("Gets the full recipe for pesto", () => {
+  //arrange
+  const dish = "pesto";
+  const expectedRecipe = {
+    'Basil': '2 cups',
+    'Pine Nuts': '2 tablespoons',
+    'Garlic': '2 cloves',
+    'Olive Oil': '0.5 cups',
+    'Grated Parmesan': '0.5 cups'
+  };
+
+  //act  
+  findRecipe(dish, (actualRecipe) => {
+    //assert
+    expect(undefined).toBeDefined(); // No way this passes, right?
+  });
+});
+
+```
+
+Running this test will produce a bewildering pass! Again, Jest has no way of knowing that the callback is asynchronous, so it will not wait for it and it will not see the failing `expect()` assertion.
+
+To fix this issue, Jest allows us to add a `done` parameter in the `test()` callback function. The value of `done` is a function, and when included as a parameter, Jest knows that the test should not finish until this `done()` function is called.
+
+Let’s take a final look at the test for the `findRecipe()` function, this time using the `done` parameter.
+
+```js
+// Notice that we need to pass `done` as an argument to the `it()` function to signal that the test will perform an async operation.
+it("Gets the full recipe for pesto", (done) => {
+  //arrange
+  const dish = "pesto";
+  const expectedRecipe = {
+    'Basil': '2 cups',
+    'Pine Nuts': '2 tablespoons',
+    'Garlic': '2 cloves',
+    'Olive Oil': '0.5 cups',
+    'Grated Parmesan': '0.5 cups'
+  };
+
+  //act  
+  findRecipe(dish, (actualRecipe) => {
+    //assert
+    try {
+      expect(actualRecipe).toEqual(expectedRecipe);
+      done();
+    } catch (error) {
+      done(error);
+    }   
+  });
+});
+
+```
+
+Let’s break down this example:
+
+- In the first line of code, the `done` parameter is added to the callback passed to `it()`. Jest now knows to wait until that function is called before concluding the test.
+- The `done()` function is called after the `expect()` assertion is made. This way, the `expect()` results will not be reported until the async operation is complete and Jest moves on to the next test!
+
+You should notice that the `expect()` and `done()` calls are being made in a `try` block. Without this, if the assertion were to fail, `expect()` would throw an error before the `done()` function gets a chance to be called. From Jest’s perspective, the reason for the test failure would be a timeout error (since `done()` was never called) rather than the actual error thrown by the failed `expect()` assertion.
+
+By using a `catch` block, we can capture the `error` value thrown and pass it to `done()`, which then displays it in the test output. Though not required, this is a best practice and will yield better test outputs.
