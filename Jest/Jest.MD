@@ -372,3 +372,61 @@ Let’s break down this example:
 - Inside, we declared an `apiRequest()` function that is assigned a value of `jest.fn()`.
 - By passing a callback function to `jest.fn()`, we can define the behavior of the mocked function. In this case, we have the mocked function return a custom Promise that matches the structure expected by our application (an object with `status` and `data` properties).
 - Lastly, we export `apiRequest` as the default export.
+
+## Mocking with Jest(Part 2)
+
+We want to replace the actual `apiRequest()` function with the mocked one we created!
+
+Let’s take a look at the steps to use a function that we’ve created in our **__mocks__/** directory in our tests.
+
+1. First, in the test file, we import the real function. This allows the test to work as it would otherwise if no mock existed.
+2. Then use the `jest.mock()` function provided by Jest to override the value with the mocked one defined in the **__mocks__/** folder. `jest.mock()` accepts a string as an argument that should match the file path to the file being mocked.
+
+> Note: This second step is only required when mocking local modules. When mocking modules installed into the `node_modules` directory, the module will automatically be mocked when it is imported in step 1.
+
+```js
+// import the actual module
+import apiRequest from './api-request.js';
+
+// then tell Jest mock the implementation!
+jest.mock('./api-request.js');
+
+```
+
+Following these steps will cause any `apiRequest()` function calls made in the Jest tests to use the mocked version instead.
+
+We can also further manipulate how specific methods in the mocked module behave by using special methods attached to functions mocked with `jest.fn()`. One of these methods is `mockFunction.mockResolvedValueOnce()`, which accepts a value that the next call to `mockFunction()` will resolve to.
+
+```js
+// file: recipes.js
+
+import { findRecipe } from './recipes.js'; 
+
+// import the actual module
+import apiRequest from './api-request.js';
+
+// then, tell Jest to mock the implementation!
+jest.mock('./api-request.js');
+
+it("Gets the full recipe for a dish", async () => {
+  // arrange  
+  const dish = "Pesto";
+  const expectedValue = { "Magical Deliciousness": "3 cups" };
+
+  // set the resolved value for the next call to apiRequest  
+  const mockResponse = {
+    status: "mock",
+    data: { "Magical Deliciousness": "3 cups" }
+  }
+  apiRequest.mockResolvedValueOnce(mockResponse);
+
+  // act  
+  const actualRecipe = await findRecipe(dish);
+
+  // assert
+  expect(actualRecipe).toEqual(expectedValue);
+});
+
+```
+
+In the example above, the `.mockResolvedValueOnce()` method is used to determine what the next call to the `apiRequest()` function will resolve to. This method may be called any number of times in a test and may be useful if you’d like to finely control what each call to your mocked function resolves to.
