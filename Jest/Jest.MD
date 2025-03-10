@@ -275,6 +275,100 @@ Let’s break down this example:
 - In the first line of code, the `done` parameter is added to the callback passed to `it()`. Jest now knows to wait until that function is called before concluding the test.
 - The `done()` function is called after the `expect()` assertion is made. This way, the `expect()` results will not be reported until the async operation is complete and Jest moves on to the next test!
 
-You should notice that the `expect()` and `done()` calls are being made in a `try` block. Without this, if the assertion were to fail, `expect()` would throw an error before the `done()` function gets a chance to be called. From Jest’s perspective, the reason for the test failure would be a timeout error (since `done()` was never called) rather than the actual error thrown by the failed `expect()` assertion.
+We should notice that the `expect()` and `done()` calls are being made in a `try` block. Without this, if the assertion were to fail, `expect()` would throw an error before the `done()` function gets a chance to be called. From Jest’s perspective, the reason for the test failure would be a timeout error (since `done()` was never called) rather than the actual error thrown by the failed `expect()` assertion.
 
 By using a `catch` block, we can capture the `error` value thrown and pass it to `done()`, which then displays it in the test output. Though not required, this is a best practice and will yield better test outputs.
+
+## Testing Async Code with Jest(Part 2)
+
+We will now explore testing functions that return a Promise.Let’s return to the `findRecipe()` function altered slightly. Instead of passing the fetched data to a callback, the function will now return a Promise. We now can use this function, along with the `await` keyword, like so:
+
+```js
+const recipe = await findRecipe('pesto');
+console.log(recipe);
+/* 
+Prints {
+  'Basil': '2 cups',
+  'Pine Nuts': '2 tablespoons',
+  'Garlic': '2 cloves',
+  'Olive Oil': '0.5 cups',
+  'Grated Parmesan': '0.5 cups'
+}
+*/
+```
+
+Jest supports the use of the `async` and `await` keywords, making handling Promises a breeze! Our test for the `findRecipe()` function can now be written like so:
+
+```js
+it("Gets the full recipe for pesto", async () => {
+  //arrange
+  const dish = "Pesto"
+  const expectedRecipe = {
+    'Basil': '2 cups',
+    'Pine Nuts': '2 tablespoons',
+    'Garlic': '2 cloves',
+    'Olive Oil': '0.5 cups',
+    'Grated Parmesan': '0.5 cups'
+  }
+
+  //act  
+  const actualRecipe = await findRecipe(dish);
+
+  //assert
+  expect(actualRecipe).toEqual(expectedRecipe);
+});
+
+```
+
+When using the `async` and `await` keywords, the `async` keyword is placed before the function that contains asynchronous code. In this case, that would be the callback passed to `test()`. Then, the `await` keyword is placed in front of the asynchronous function call `findRecipe()`.
+
+With the inclusion of the `async`/`await` keywords, we can now work with asynchronous code that returns a promise. Jest will wait for any `await` statement to resolve before continuing on.
+
+**When should i use `done()` and `async/await` ?**
+
+**Solution** 
+
+Although both are functionally similar, their uses can help make your test code more readable. You should use `done()` for asynchronous code that uses callbacks, while `async/await` is best suited for code that returns Promises. Choosing the appropriate method can help make your code more readable and easier to understand.
+
+## Mocking with Jest(Part 1)
+
+Testing with the real REST API is not ideal for a few reasons:
+
+- We aren’t concerned about whether the third-party API works. Instead, we only care about whether or not the function that performs the API call works.
+- Incorporating REST API calls into our tests can create fragile tests that may fail simply due to network issues.
+- If we were interacting with a production-grade database, we could accidentally alter official data
+
+A safer and more efficient way to write our tests would be to create a **mock** function that bypasses the API call and returns values that we control instead. A mock function is a clone implementation of the code we are testing. It behaves the same way, but it is easier to control and test. We can use the mock function to test our code in isolation without worrying about the actual implementation details.
+
+Jest provides us with a way to mock functions and even entire modules to do just that!
+
+Creating the mock function and then replacing the real function with the mocked one requires two separate steps. First, let’s go over the steps to create a mocked function.
+
+1. First, we need to create a directory labeled **__mocks__/** in the same directory as the module that we want to mock. This is a special directory that Jest will know to look for when mocking the specified module.
+2. Next, inside the directory, we create a file with the same name as the module that will be mocked.
+3. Then, we create a module with the functionality that we want. Functions that we want to mock can be created using `jest.fn()`, the function provided by the Jest library for creating [mock functions](https://jestjs.io/docs/mock-function-api).
+4. Lastly, we export the module.
+
+The function that makes the API call is called `apiRequest()` and it is exported from a file called **utils/api-request.js**. To mock this file and the `apiRequest()` function, we might write something like this:
+
+```js
+// file: utils/__mocks__/api-request.js
+// Create a Jest mock function with the same name as the function we're mocking
+const apiRequest = jest.fn(() => {
+  //Return a resolved Promise with a mock response object
+  return Promise.resolve({ 
+    status: "", 
+    data: {} 
+  });
+});
+
+export default apiRequest;
+
+```
+
+Let’s break down this example:
+
+- Since we are mocking the **utils/api-request.js** file, we created a file called **utils/__mocks__/api-request.js**.
+- Inside, we declared an `apiRequest()` function that is assigned a value of `jest.fn()`.
+- By passing a callback function to `jest.fn()`, we can define the behavior of the mocked function. In this case, we have the mocked function return a custom Promise that matches the structure expected by our application (an object with `status` and `data` properties).
+- Lastly, we export `apiRequest` as the default export.
