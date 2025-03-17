@@ -18,7 +18,7 @@ The **Learn React Testing** course covers:
 | 📅 Date    | 📖 Lesson             | ✅ Status | 📝 Notes |
 | ---------- | --------------------- | -------- | -------- |
 | 2024-03-10 | Jest                  | ✅        | Notes    |
-| 2024-03-11 | React Testing Library | ⏳        | -        |
+| 2024-17-0  | React Testing Library | ✅        | -        |
 
 ---
 
@@ -33,3 +33,9 @@ The **Learn React Testing** course covers:
 ---
 
 🚀 Happy Testing! 🧪⚛️  
+
+---
+
+Certificate 
+
+![](./assets/react-testing-certificate.png)

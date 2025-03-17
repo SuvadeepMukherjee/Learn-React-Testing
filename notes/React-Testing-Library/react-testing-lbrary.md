@@ -351,3 +351,42 @@ it('should remove header display', async () => {
 In our unit test, the header will be removed 250ms after the button has been clicked. The callback function inside `waitFor()` confirms this by querying for this element and then waiting for the `expect()` assertion to pass.
 
 The `waitFor()` method can also optionally accept an `options` object as a second argument. This object can be used to control how long to wait for before aborting and much more. Though the details of this `options` object are beyond the scope of the lesson, you can read more about it in the [docs](https://testing-library.com/docs/dom-testing-library/api-async/#waitfor).
+
+## Testing for Accessibility
+
+Now that we’ve covered a wide stretch of RTL methods, let’s talk about accessibility and how it can help you write better tests. One of the guiding principles of React Testing Library is to write “queries that reflect the experience of visual/mouse users as well as those that use assistive technology.” Usually, this means using the same text that the user would see, rather than the implementation details like class names or IDs.
+
+Writing tests that adhere to this principle forces you to make your applications more accessible. If a test can find and interact with your elements by their text, it’s more likely that a user who uses assistive technology can as well.
+
+One way we can write tests with accessibility concerns in mind is by sticking to querying with `ByRole` queries (`getByRole`, `findByRole`, `queryByRole`). The `ByRole` variant will be able to query any elements within the [accessibility tree](https://developer.mozilla.org/en-US/docs/Glossary/Accessibility_tree). If you are unable to query for the component you want to test, you may have just exposed a part of your application that is inaccessible.
+
+Let’s see this in action. Suppose we’re testing an input form:
+
+```js
+<input id="search" value="" />
+
+```
+
+If we try to use `getByRole`, it will not be able to query for this element. This exposes a component that is inaccessible. To fix it, we would have to make some modifications to the element by adding a `type` which provides a [role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles) and `label` with an `htmlFor` attribute which provides an [accessible name](https://www.tpgi.com/what-is-an-accessible-name/) for an element. Note that how you assign accessible names differs based on the tag you’re using.
+
+```js
+<label htmlFor="search">
+   <input type="search" id="search" value="" />
+</label>
+
+```
+
+Then our query can be:
+
+```js
+screen.getByRole('searchbox', {name: /search/i})
+
+```
+
+Great! We’ve knocked out two birds with one stone here. We made our input more accessible, and we were able to narrow down what query to use.
+
+While `ByRole` is a great default for accessibility, you can visit the [React Testing Library Playground](https://testing-playground.com/) for suggestions on accessible queries for more complex needs.
+
+Including accessibility considerations in your testing process can help proactively identify and address potential accessibility issues. This not only ensures that your application is inclusive and usable by a wider range of users but also enhances the overall quality and user experience.
+
+> Note: If you want to explore a bit more about accessibility, check out the [What is Digital Accessbility](https://www.codecademy.com/article/what-is-digital-accessibility) article, or even try your hand at using [screen readers](https://www.codecademy.com/article/how-to-setup-screen-reader) to assess how accessible your projects are!
