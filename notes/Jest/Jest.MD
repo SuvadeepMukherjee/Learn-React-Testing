@@ -33,7 +33,7 @@ This will launch the test in *watch mode*, allowing the test to re-run every ti
 
 ## Configuring Jest
 
-Jest allows us to customize the terminal output using command-line flage , one of the most commonly used is the --coverage flag
+Jest allows us to customize the terminal output using command-line flag , one of the most commonly used is the --coverage flag
 
 `npm test -- --coverage`
 
