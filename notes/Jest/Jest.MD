@@ -1,6 +1,6 @@
 # Jest
 
-#### What is Jest ?
+## What is Jest ?
 
 Jest provides the two key ingredients needed for testing:
 
