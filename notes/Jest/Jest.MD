@@ -39,7 +39,7 @@ Jest allows us to customize the terminal output using command-line flag , one of
 
 Make sure to note the double dash between the `npm test` and `--coverage`. This is to separate the arguments from the test command itself. This `--coverage` flag allows us to get a report of which lines of our code were actually tested. In addition to being outputted in the terminal, this report becomes available in a directory named **coverage/** that is created at runtime.
 
-![](../assets/coverage.png)
+![](../../assets/coverage.png)
 
 This report can help us ensure our code has been thoroughly tested. From the report, we can see that there are four categories of our code that are being analyzed:
 
