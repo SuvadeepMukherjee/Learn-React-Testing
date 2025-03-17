@@ -158,9 +158,6 @@ const App = () => {
 };
 
 export default App;
-
-
-
 ```
 
 Let’s look at [`.queryByX`](https://testing-library.com/docs/queries/about/) variant. The `.queryByX` methods return `null` if they don’t find a DOM node, unlike the `.getByX` methods, which throw an error and immediately cause the test to fail. This is useful when asserting that an element is NOT present in the DOM.
@@ -179,7 +176,6 @@ it('Header should not show Goodbye yet', () => {
   // Assert null as we have not clicked the button
   expect(header).toBeNull();
 });
-
 ```
 
 By using the `.queryByText()`, variant when there is no element with the text `'Goodbye!'`, the value `null` is returned, and we can successfully validate this with `expect(header).toBeNull()`. If the `.getByText()` method were used instead, the test would fail immediately due to the error rather than continuing on to the `expect()` assertion.
@@ -271,7 +267,6 @@ it('should show text content as Hey Mack!', () => {
   // Assert textbox has text content 'Hey Mack!'
   expect(textbox).toHaveValue('Hey Mack!');
 });
-
 ```
 
 In the example above, the `userEvent.type()` method is used, which accepts a DOM node to interact with (`textbox`) and a string to type into that node (`’Hey Mack!’).
@@ -345,7 +340,6 @@ it('should remove header display', async () => {
     expect(header).toBeNull()
   })
 });
-
 ```
 
 In our unit test, the header will be removed 250ms after the button has been clicked. The callback function inside `waitFor()` confirms this by querying for this element and then waiting for the `expect()` assertion to pass.
@@ -364,7 +358,6 @@ Let’s see this in action. Suppose we’re testing an input form:
 
 ```js
 <input id="search" value="" />
-
 ```
 
 If we try to use `getByRole`, it will not be able to query for this element. This exposes a component that is inaccessible. To fix it, we would have to make some modifications to the element by adding a `type` which provides a [role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles) and `label` with an `htmlFor` attribute which provides an [accessible name](https://www.tpgi.com/what-is-an-accessible-name/) for an element. Note that how you assign accessible names differs based on the tag you’re using.
@@ -373,14 +366,12 @@ If we try to use `getByRole`, it will not be able to query for this element. Th
 <label htmlFor="search">
    <input type="search" id="search" value="" />
 </label>
-
 ```
 
 Then our query can be:
 
 ```js
 screen.getByRole('searchbox', {name: /search/i})
-
 ```
 
 Great! We’ve knocked out two birds with one stone here. We made our input more accessible, and we were able to narrow down what query to use.
@@ -389,4 +380,4 @@ While `ByRole` is a great default for accessibility, you can visit the [React
 
 Including accessibility considerations in your testing process can help proactively identify and address potential accessibility issues. This not only ensures that your application is inclusive and usable by a wider range of users but also enhances the overall quality and user experience.
 
-> Note: If you want to explore a bit more about accessibility, check out the [What is Digital Accessbility](https://www.codecademy.com/article/what-is-digital-accessibility) article, or even try your hand at using [screen readers](https://www.codecademy.com/article/how-to-setup-screen-reader) to assess how accessible your projects are!
+> 
