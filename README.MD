@@ -15,10 +15,10 @@ The **Learn React Testing** course covers:
 
 ## 🚀 Progress Tracker
 
-| 📅 Date    | 📖 Lesson             | ✅ Status | 📝 Notes |
-| ---------- | --------------------- | -------- | -------- |
-| 2024-03-10 | Jest                  | ✅        | Notes    |
-| 2024-17-0  | React Testing Library | ✅        | -        |
+| 📅 Date    | 📖 Lesson             | ✅ Status | 📝 Notes                                                                                                                        |
+| ---------- | --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| 2024-03-10 | Jest                  | ✅        | [Notes](https://github.com/SuvadeepMukherjee/Learn-React-Testing/blob/main/notes/Jest/Jest.MD)                                  |
+| 2024-17-0  | React Testing Library | ✅        | [Notes](https://github.com/SuvadeepMukherjee/Learn-React-Testing/blob/main/notes/React-Testing-Library/react-testing-lbrary.md) |
 
 ---
 
