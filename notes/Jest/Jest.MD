@@ -7,8 +7,6 @@ Jest provides the two key ingredients needed for testing:
 1. An assertion library: an API of functions for validating a program’s functionality
 2. A test runner: a tool that executes tests and provides outputted test summaries
 
-
-
 ## Getting Started With Jest
 
 Jest is the default test runner included and preconfigured in `create-react-app`. There is no further installation necessary when using `create-react-app` to build a new app!
@@ -23,7 +21,7 @@ How we store test files in your project may depend on our specific needs. We may
 
 File Structure usually recommended 
 
-![](../assets/test-file-structure.png)
+![](../../assets/test-file-structure.png)
 
 It is a good practice to match the name of the test file to the file that we want to test. For example, if we were to test a file called **math.js**, we might create a file called **math.test.js**.
 
@@ -57,8 +55,6 @@ A unit test is designed to test the smallest unit of your code, like a single fu
 When unit testing, each function should be tested in isolation. We can do this by creating separate containers for our testing logic using the `it()` function or the `test()` function.
 
 Functionally, `it()` and `test()` are the same. Using one over the other can make tests more readable. We should choose the one that organizationally makes sense in your project and use case.
-
-
 
 ```js
 it("should render onto the screen",() => {});
@@ -110,7 +106,6 @@ it("Gets only the ingredients list for Pesto", () => {
   //assert  
   expect(actualIngredients).toEqual(expectedIngredients)
 });
-
 ```
 
 In this example, we follow the *Arrange*, *Act*, *Assert* best practice testing pattern in the callback passed to `it()`:
@@ -154,7 +149,6 @@ it("Gets only the ingredients list for Pesto", () => {
   expect(actualIngredients[0] === "Basil").toBeTruthy();
   expect(actualIngredients).not.toContain("Ice Cream");
 });
-
 ```
 
 Let’s go over the matchers used in this example:
@@ -207,7 +201,6 @@ it("Gets the full recipe for pesto", () => {
     expect(actualRecipe).toEqual(expectedRecipe);
   });
 });
-
 ```
 
 This logic seems fairly sound. When the API call resolves, the provided callback will be executed with the fetched data (`actualRecipe`) which can be compared to `expectedRecipe`.
@@ -234,7 +227,6 @@ it("Gets the full recipe for pesto", () => {
     expect(undefined).toBeDefined(); // No way this passes, right?
   });
 });
-
 ```
 
 Running this test will produce a bewildering pass! Again, Jest has no way of knowing that the callback is asynchronous, so it will not wait for it and it will not see the failing `expect()` assertion.
@@ -267,7 +259,6 @@ it("Gets the full recipe for pesto", (done) => {
     }   
   });
 });
-
 ```
 
 Let’s break down this example:
@@ -317,7 +308,6 @@ it("Gets the full recipe for pesto", async () => {
   //assert
   expect(actualRecipe).toEqual(expectedRecipe);
 });
-
 ```
 
 When using the `async` and `await` keywords, the `async` keyword is placed before the function that contains asynchronous code. In this case, that would be the callback passed to `test()`. Then, the `await` keyword is placed in front of the asynchronous function call `findRecipe()`.
@@ -363,7 +353,6 @@ const apiRequest = jest.fn(() => {
 });
 
 export default apiRequest;
-
 ```
 
 Let’s break down this example:
@@ -390,7 +379,6 @@ import apiRequest from './api-request.js';
 
 // then tell Jest mock the implementation!
 jest.mock('./api-request.js');
-
 ```
 
 Following these steps will cause any `apiRequest()` function calls made in the Jest tests to use the mocked version instead.
@@ -426,7 +414,6 @@ it("Gets the full recipe for a dish", async () => {
   // assert
   expect(actualRecipe).toEqual(expectedValue);
 });
-
 ```
 
 In the example above, the `.mockResolvedValueOnce()` method is used to determine what the next call to the `apiRequest()` function will resolve to. This method may be called any number of times in a test and may be useful if you’d like to finely control what each call to your mocked function resolves to.
