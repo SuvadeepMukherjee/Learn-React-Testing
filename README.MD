@@ -1,11 +1,11 @@
 # Learn React Testing ⚛️🚀
 
 🧪 This repository tracks my progress in Codecademy's **Learn React Testing** course.  
-It includes my notes, exercises, and key takeaways as I dive into testing fundamentals and best practices for React applications.  
+It includes my notes, exercises, and key takeaways as I dive into testing fundamentals and best practices for React applications.
 
 ## 📖 Course Overview
 
-The **Learn React Testing** course covers:  
+The **Learn React Testing** course covers:
 
 ✅ Jest
 
@@ -17,8 +17,8 @@ The **Learn React Testing** course covers:
 
 | 📅 Date    | 📖 Lesson             | ✅ Status | 📝 Notes                                                                                                                        |
 | ---------- | --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| 2024-03-10 | Jest                  | ✅        | [Notes](https://github.com/SuvadeepMukherjee/Learn-React-Testing/blob/main/notes/Jest/Jest.MD)                                  |
-| 2024-17-0  | React Testing Library | ✅        | [Notes](https://github.com/SuvadeepMukherjee/Learn-React-Testing/blob/main/notes/React-Testing-Library/react-testing-lbrary.md) |
+| 2024-17-03 | Jest                  | ✅        | [Notes](https://github.com/SuvadeepMukherjee/Learn-React-Testing/blob/main/notes/Jest/Jest.MD)                                  |
+| 2024-17-03 | React Testing Library | ✅        | [Notes](https://github.com/SuvadeepMukherjee/Learn-React-Testing/blob/main/notes/React-Testing-Library/react-testing-lbrary.md) |
 
 ---
 
@@ -28,14 +28,14 @@ The **Learn React Testing** course covers:
 🎯 Learn how to use Jest & React Testing Library effectively.  
 🎯 Write unit and integration tests for React components.  
 🎯 Document my journey & track progress.  
-🎯 Gain confidence in writing robust, maintainable tests.  
+🎯 Gain confidence in writing robust, maintainable tests.
 
 ---
 
-🚀 Happy Testing! 🧪⚛️  
+🚀 Happy Testing! 🧪⚛️
 
 ---
 
-Certificate 
+Certificate
 
 ![](./assets/react-testing-certificate.png)
